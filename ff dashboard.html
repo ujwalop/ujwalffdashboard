@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Fire Live Dashboard</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #1a1a1a;
+            color: #f5f6fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .dashboard-container {
+            width: 90%;
+            max-width: 1400px;
+            height: 70vh;
+            background-color: #0f0f0f;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .logo {
+            font-size: 2.5em;
+            color: #ffc300;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        .live-symbol {
+            font-size: 1.2em;
+            color: #ff5733;
+            border: 2px solid #ff5733;
+            padding: 5px 10px;
+            border-radius: 5px;
+            animation: blink 1s step-start infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        .content {
+            flex: 1;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2em;
+            color: #ff5733;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1000px;
+        }
+
+        thead th {
+            background-color: #ffc300;
+            padding: 15px;
+            font-size: 1.3em;
+            color: #1a1a1a;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+        }
+
+        tbody td {
+            background-color: #333;
+            text-align: center;
+            padding: 15px;
+            border-bottom: 1px solid #0f0f0f;
+            font-size: 1.1em;
+            position: relative;
+            overflow: hidden;
+            animation: slideIn 1s ease-out;
+            color: #f5f6fa;
+        }
+
+        tbody tr:hover td {
+            background-color: #ff5733;
+            color: #fff;
+            transition: background-color 0.3s ease;
+        }
+
+        tbody tr:nth-child(even) td {
+            background-color: #222;
+        }
+
+        .edit-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #ff5733;
+            color: #f5f6fa;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+        }
+
+        .edit-btn:hover {
+            background-color: #ffc300;
+            color: #1a1a1a;
+        }
+
+        tbody td[contenteditable="true"] {
+            background-color: #222;
+            outline: 2px solid #ff5733;
+            transition: background-color 0.3s ease;
+        }
+
+        @media (max-width: 1200px) {
+            .dashboard-container {
+                height: 80vh;
+            }
+
+            table {
+                min-width: 800px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .dashboard-container {
+                height: 90vh;
+            }
+
+            table {
+                min-width: 600px;
+            }
+        }
+
+        .footer {
+            text-align: center;
+            color: #ffc300;
+            font-size: 1.2em;
+            margin-top: 20px;
+            animation: footerFadeIn 2s ease-in-out;
+        }
+
+        @keyframes footerFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .opening-animation {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ff5733;
+            font-size: 2em;
+            opacity: 0;
+            animation: slideInText 2s ease-in-out forwards;
+        }
+
+        @keyframes slideInText {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="opening-animation">Made by Ujwal Guru</div>
+
+    <div class="dashboard-container">
+        <div class="header">
+            <div class="logo">Free Fire Live Dashboard</div>
+            <div class="live-symbol">LIVE</div>
+        </div>
+        <div class="content">
+            <table id="tournamentTable">
+                <thead>
+                    <tr>
+                        <th>Team Name</th>
+                        <th>Round 1</th>
+                        <th>Round 2</th>
+                        <th>Final</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Rows will be dynamically generated here -->
+                </tbody>
+            </table>
+        </div>
+        <button class="edit-btn" id="editButton">Edit Scores</button>
+    </div>
+
+    <div class="footer">Made by Ujwal Guru</div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const teams = [
+                "Knight Rider", "PIXEL TITANS", "THE VIPERS", "KOKANI Bandhu",
+                "KARTIK GUPTA", "KG ESPORTS", "TEAM QUDRAPALS", "Four rushers",
+                "Team India", "2G ESPORTS", "Arcane Shadows", "Elite Slayers",
+                "Team warriors", "worriors showdown", "THUNDER ELITE", "THE RISER'S!"
+                ,"Team unknown"
+            ];
+
+            const tableBody = document.querySelector("#tournamentTable tbody");
+
+            teams.forEach(team => {
+                const row = document.createElement("tr");
+
+                const teamNameCell = document.createElement("td");
+                teamNameCell.textContent = team;
+                teamNameCell.setAttribute("contenteditable", "false");
+                row.appendChild(teamNameCell);
+
+                for (let i = 0; i < 3; i++) {
+                    const cell = document.createElement("td");
+                    cell.textContent = "-";
+                    cell.setAttribute("contenteditable", "false");
+                    row.appendChild(cell);
+                }
+
+                tableBody.appendChild(row);
+            });
+
+            const editButton = document.getElementById("editButton");
+            let isEditing = false;
+
+            editButton.addEventListener("click", () => {
+                isEditing = !isEditing;
+
+                document.querySelectorAll("#tournamentTable tbody td").forEach(cell => {
+                    cell.setAttribute("contenteditable", isEditing.toString());
+                });
+
+                editButton.textContent = isEditing ? "Save Scores" : "Edit Scores";
+            });
+        });
+    </script>
+</body>
+</html>
